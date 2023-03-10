@@ -1,13 +1,13 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
-    <!-- Creer la bar -->
+    <!-- Creer la bar recherche-->
     <div class="row">
         <div class = "col-md-12">
             <form class = "card card-sm">
                 <div class="card-body row no-gutters align-items-center">
                     <div class="col">
-                        <input type="search" name="item-name" class="form-control form-control ">
+                        <input type="search" placeholder="Entrez le nom du produit que vous chercher" name="item-name" class="form-control form-control-borderless">
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-success"> Recherche </button>
@@ -18,18 +18,74 @@
     </div>
 
     <div class="row">
-        {%for product in product_object %}
-            <div class="col-md-3">
-                <div class="card">
-                    <img src="{{product.image}}" alt="" class="card-ing-top">
-                    <div class="card-body">
-                        <div class="card-title"> {{product.title}} </div>
-                        <div class="card-text"> {{product.price}} </div>
-                        <button class="btn btn-warning"> Voir </div>
-                        <button class="btn btn-success"> Ajouter </div>
-                    </div>
+        {% for product in product_object %}
+        <div class="col-md-4">  
+            <div class="card">
+                <img src="{{ product.image }}" alt="" class="card-ing-top">
+                <div class="card-body">
+                    <div class="card-title"> {{product.title}} </div>
+                    <div  style="color: orange" class="card-text">$ {{product.price}} </div>
+                    <a href ="{{product.id}}"> <button class="btn btn-warning"> Voir </button> </a>
+                    <button id="{{product.id}}" class="btn ted btn-success"> Ajouter </div>
                 </div>
             </div>
+        </div>
         {%endfor%}
     </div>
+
+    <!-- Pagination de notre site -->
+    <div class="row mt-3">
+        <div class="col-md-3 offset-md-4">
+            <ul class="pagination">
+                {% if product_object.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{product_object.previous_page_number}}"> Precedent</a>
+                    </li>
+                {% endif %}
+                    <li class="page-item active">
+                        <a class="page-link" href="?page={{product_object.number}}"> {{product_object.number}}</a>
+                    </li>
+
+                {% if product_object.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{product_object.next_page_number}}"> Suivant</a>
+                    </li>
+                {% endif %}                
+            </ul>
+        </div>
+    </div>
+{% endblock  %}
+
+{% block js %}
+    <script>
+        console.log('juste pour tster');
+        if(localStorage.getItem('panier') == null){
+            var panier = {}
+        }else{
+            panier = JSON.parse( localStorage.getItem('panier'))
+        }
+        $(document).on('click', '.ted', function(){
+            console.log('ajouter')
+            var item_id = this.id.toString()
+            console.log(item_id)
+            if(panier[item_id] != undefined){
+                panier[item_id] = panier[item_id] + 1;
+            }else{
+                panier[item_id] = 1; 
+            }
+            console.log(panier);
+            //garder en mémoire
+            localStorage.setItem('panier', JSON.stringify(panier));
+            //La longeur de notre pannier
+           // console.log(Object.keys(panier).length);
+            document.getElementById("panier").innerHTML ="Panier("+Object.keys(panier).length+")";
+        });
+
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+            document.getElementById('panier').setAttribute('data-content', '<h5> Voici votre liste </h5>');
+        });
+            
+    </script>
+
 {% endblock  %}
