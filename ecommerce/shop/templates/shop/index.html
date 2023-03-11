@@ -19,14 +19,14 @@
 
     <div class="row">
         {% for product in product_object %}
-        <div class="col-md-4">  
+        <div class="col-md-3">  
             <div class="card">
                 <img src="{{ product.image }}" alt="" class="card-ing-top">
                 <div class="card-body">
-                    <div class="card-title"> {{product.title}} </div>
+                    <div id="aa{{ product.id }}" class="card-title"> {{ product.title }} </div>
                     <div  style="color: orange" class="card-text">$ {{product.price}} </div>
-                    <a href ="{{product.id}}"> <button class="btn btn-warning"> Voir </button> </a>
-                    <button id="{{product.id}}" class="btn ted btn-success"> Ajouter </div>
+                    <a href ="{{product.id}}" class="btn btn-warning"> Voir </a>
+                    <button id="{{product.id}}" class="btn ted btn-success"> Ajouter
                 </div>
             </div>
         </div>
@@ -58,20 +58,23 @@
 
 {% block js %}
     <script>
-        console.log('juste pour tster');
         if(localStorage.getItem('panier') == null){
             var panier = {}
         }else{
             panier = JSON.parse( localStorage.getItem('panier'))
         }
+        
         $(document).on('click', '.ted', function(){
             console.log('ajouter')
             var item_id = this.id.toString()
             console.log(item_id)
             if(panier[item_id] != undefined){
-                panier[item_id] = panier[item_id] + 1;
+                quantite = panier[item_id][0] + 1
+                panier[item_id][0] = quantite;
             }else{
-                panier[item_id] = 1; 
+                quantite = 1; 
+                non = document.getElementById("aa"+item_id).innerHTML;
+                panier[item_id] = [quantite, non]
             }
             console.log(panier);
             //garder en mémoire
@@ -79,13 +82,32 @@
             //La longeur de notre pannier
            // console.log(Object.keys(panier).length);
             document.getElementById("panier").innerHTML ="Panier("+Object.keys(panier).length+")";
+            
+            //appeler la function
+            AfficherList(panier);
         });
 
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-            document.getElementById('panier').setAttribute('data-content', '<h5> Voici votre liste </h5>');
-        });
-            
+        //Recuperer le nom de chaque produit
+        function AfficherList(var_panier){
+            console.log('juste pour tester');
+            var panierString = " ";
+            // contactener ce text avec la liste des produits
+            panierString += "<h5> Voici votre liste: </h5>";
+            var index = 1;
+            //affichier identifiant de chaque produit
+            for(var x in var_panier){
+                console.log(x);
+                panierString += index;
+                panierString += document.getElementById("aa"+x).innerHTML + " Qte: " + var_panier[x][0] + "</br>"; //comme c'est le dom
+                index += 1;
+            }
+            panierString += "<a href='checkout/' class='btn btn-primary btn-lg btn-block' > Checkout </a>"
+
+            $('[data-toggle="popover"]').popover();
+            //changer le message du popover
+            document.getElementById("panier").setAttribute('data-content', panierString);
+        }
+
     </script>
 
 {% endblock  %}
