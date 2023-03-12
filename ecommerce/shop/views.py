@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Product, Commande
+from .models import Product, Commande, Category
 from django.core.paginator import Paginator
 # Create your views here.
 
 def index (request):
+    category = Category.objects.all()
     product_object = Product.objects.all()
     item_name = request.GET.get('item-name')
     if item_name != '' and item_name is not None:
@@ -13,7 +14,7 @@ def index (request):
     paginator = Paginator(product_object,4)
     page = request.GET.get('page')
     product_object = paginator.get_page(page)
-    return render(request, 'shop/index.html', {'product_object' : product_object})
+    return render(request, 'shop/index.html', {'product_object': product_object , 'category' :category})
 
 
 def detail(request, myid):
@@ -21,6 +22,7 @@ def detail(request, myid):
     return render(request, 'shop/detail.html', {'product' : product})
         
 def checkout(request):
+    category = Category.objects.all()
     if request.method == "POST":
         items = request.POST.get('items')
         nom = request.POST.get('nom')
@@ -36,10 +38,11 @@ def checkout(request):
         com.save()
         return redirect('confir')
         
-    return render(request, 'shop/checkout.html')
+    return render(request, 'shop/checkout.html', {'category' :category})
 
 def confirmation(request):
+    category = Category.objects.all()
     info = Commande.objects.all()[:1] #Ne prend que element 1
     for item in info :
         nom = item.nom
-    return render(request, 'shop/confirmation.html', {'name' : nom})
+    return render(request, 'shop/confirmation.html', {'name' : nom, 'category' :category})

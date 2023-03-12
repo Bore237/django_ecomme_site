@@ -86,13 +86,11 @@
            // console.log(Object.keys(panier).length);
             document.getElementById("panier").innerHTML ="Panier("+Object.keys(panier).length+")";
             
-            //appeler la function
-            AfficherList(panier);
         });
 
+        AfficherList(panier);
         //Recuperer le nom de chaque produit
         function AfficherList(var_panier){
-            console.log('juste pour tester');
             var panierString = " ";
             // contactener ce text avec la liste des produits
             panierString += "<h5> Voici votre liste: </h5>";
@@ -101,7 +99,7 @@
             for(var x in var_panier){
                 console.log(x);
                 panierString += index;
-                panierString += document.getElementById("aa"+x).innerHTML + "Price"+ var_panier[x][2] + " Qte: " + var_panier[x][0] + "</br>"; //comme c'est le dom
+                panierString += document.getElementById("aa"+x).innerHTML + " Qte: " + var_panier[x][0] + "</br>"; //comme c'est le dom
                 index += 1;
             }
             panierString += "<a href='checkout/' class='btn btn-primary btn-lg btn-block' > Checkout </a>"

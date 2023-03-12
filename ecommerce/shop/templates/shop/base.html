@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shop</title>
 
     <!-- Pour gerer enter js bootstap -->
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
@@ -36,7 +36,7 @@
                         </li>
                         <li class="nav-item">
                           <!-- popower bouton bizare bootstrap  et activer data-html a true -->
-                          <button id = "panier" type="button" class="btn btn-secondary" data-html = "true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+                          <button id ="panier" type="button" class="btn btn-secondary" data-html ="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
                             sagittis lacus vel augue laoreet rutrum faucibus.">
                             Panier(0)
                           </button>
@@ -46,9 +46,9 @@
                             Categories
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                            {% for cat in category %}
+                              <a class="dropdown-item" href="#"> {{cat.name}} </a>
+                            {% endfor %}
                           </div>
                         </li>
                       </ul>
@@ -59,7 +59,7 @@
 
         {% block content %}{% endblock %}
     </div>
-</body>
 
+</body>
 {% block js %} {% endblock %}
 </html>
