@@ -28,7 +28,8 @@ class Product(models.Model):
         return self.title
     
 class Commande(models.Model):
-    items = models.CharField(max_length=300)
+    items = models.CharField(max_length=1000)
+    total = models.CharField(max_length=300)
     nom = models.CharField(max_length= 200)
     email = models.EmailField(max_length= 200)
     address = models.CharField(max_length= 200)
@@ -37,5 +38,8 @@ class Commande(models.Model):
     zipcode = models.CharField(max_length=300)
     date_commande = models.DateTimeField(auto_now=True)
     
+    class Meta:
+        ordering = ['-date_commande']
+
     def __str__(self):
         return self.nom

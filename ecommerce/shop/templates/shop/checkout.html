@@ -13,6 +13,7 @@
       <div class="col-md-12">
         <form method="POST">
           {% csrf_token %}
+          <input type="hidden" id="items", name="items">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputEmail4">Nom</label>
@@ -30,7 +31,7 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputCity">Ville</label>
-              <input name="ville" id="ville" class="form-control" id="inputCity">
+              <input name="ville" id="ville" class="form-control" >
             </div>
             <div class="form-group col-md-4">
               <label for="inputState">Pays</label>
@@ -45,7 +46,11 @@
             </div>
             <div class="form-group col-md-2">
               <label for="inputZip">Zip</label>
-              <input name="zipcode" id="zipcode" type="text" class="form-control" id="inputZip">
+              <input name="zipcode" id="zipcode" type="text" class="form-control" >
+            </div>
+            <div class="form-group col-md-2">
+              <label for="inputZip"> Somme total à payer </label>
+              <input name="total" id="total" type="readonly" class="bg-dark text-warning form-control" >
             </div>
           </div>
           <button type="submit" class="btn btn-primary">Commander</button>
@@ -61,15 +66,36 @@
       }else{
         panier = JSON.parse(localStorage.getItem('panier'));
       }
+      //faire la somme des prix et des quantite
+      var total =0;
+      var nombre =0;
       for(item in panier){
         let nom = panier[item][1];
         let quantite = panier[item][0];
+        let prix = panier[item][2]; 
+        //algorithme de la somme
+        nombre +=quantite;
+        total += prix;
+
         let itemString = ` <li class="list-group-item d-flex justify-content-between align-items-center">
                   ${nom}
-                   <span class="badge badge-primary badge-pill">QTE ${quantite}</span>
+                  <span class="badge badge-primary badge-pill">Quantite: ${quantite}</span>
+                  <span class="badge badge-warning badge-pill">$ ${prix} </span>
                 </li> `
         $('#item-list').append(itemString);
       }
+
+      let itemNumber = ` <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <b class= "bg-danger"> PRIX ET QUANTITE TOTAL </b>
+                  <span class="badge badge-primary badge-pill">Total: ${nombre}</span>
+                  <span class="badge badge-danger badge-pill">$ ${total} </span>
+                </li> `
+        $('#item-list').append(itemNumber);
+
+      $('#total').val("$"+total)
+      //recupperer identifiant d'une class html
+      //dollar plus # id de element html permet de réaliser une operation sur lui
+      $('#items').val(JSON.stringify(panier));
     </script>
 
 {% endblock  %}

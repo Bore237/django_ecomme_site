@@ -24,7 +24,7 @@
                 <img src="{{ product.image }}" alt="" class="card-ing-top">
                 <div class="card-body">
                     <div id="aa{{ product.id }}" class="card-title"> {{ product.title }} </div>
-                    <div  style="color: orange" class="card-text">$ {{product.price}} </div>
+                    <div  id= "price{{product.id}}" style="color: orange" class="card-text">  {{product.price}} </div>
                     <a href ="{{product.id}}" class="btn btn-warning"> Voir </a>
                     <button id="{{product.id}}" class="btn ted btn-success"> Ajouter
                 </div>
@@ -68,13 +68,16 @@
             console.log('ajouter')
             var item_id = this.id.toString()
             console.log(item_id)
+            //si y'a quelque chose dans le panier
             if(panier[item_id] != undefined){
                 quantite = panier[item_id][0] + 1
                 panier[item_id][0] = quantite;
+                panier[item_id][2] += parseFloat(document.getElementById("price"+item_id).innerHTML)
             }else{
                 quantite = 1; 
                 non = document.getElementById("aa"+item_id).innerHTML;
-                panier[item_id] = [quantite, non]
+                prix = parseFloat(document.getElementById("price"+item_id).innerHTML);
+                panier[item_id] = [quantite, non, prix]
             }
             console.log(panier);
             //garder en mémoire
@@ -98,7 +101,7 @@
             for(var x in var_panier){
                 console.log(x);
                 panierString += index;
-                panierString += document.getElementById("aa"+x).innerHTML + " Qte: " + var_panier[x][0] + "</br>"; //comme c'est le dom
+                panierString += document.getElementById("aa"+x).innerHTML + "Price"+ var_panier[x][2] + " Qte: " + var_panier[x][0] + "</br>"; //comme c'est le dom
                 index += 1;
             }
             panierString += "<a href='checkout/' class='btn btn-primary btn-lg btn-block' > Checkout </a>"
